@@ -36,22 +36,22 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 @app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
+async def refresh(Authorize: AuthJWT = Depends()):
     """
     The jwt_refresh_token_required() function insures a valid refresh
     token is present in the request before running any code below that function.
     we can use the get_jwt_subject() function to get the subject of the refresh
     token, and use the create_access_token() function again to make a new access token
     """
-    Authorize.jwt_refresh_token_required()
+    await Authorize.jwt_refresh_token_required()
 
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
     return {"access_token": new_access_token}
 
 @app.get('/protected')
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

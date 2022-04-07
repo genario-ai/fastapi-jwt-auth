@@ -41,13 +41,13 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 @app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
+async def refresh(Authorize: AuthJWT = Depends()):
     """
     Refresh token endpoint. This will generate a new access token from
     the refresh token, but will mark that access token as non-fresh,
     as we do not actually verify a password in this endpoint.
     """
-    Authorize.jwt_refresh_token_required()
+    await Authorize.jwt_refresh_token_required()
 
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user,fresh=False)
@@ -70,16 +70,16 @@ def fresh_login(user: User, Authorize: AuthJWT = Depends()):
 
 # Any valid JWT access token can access this endpoint
 @app.get('/protected')
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}
 
 # Only fresh JWT access token can access this endpoint
 @app.get('/protected-fresh')
-def protected_fresh(Authorize: AuthJWT = Depends()):
-    Authorize.fresh_jwt_required()
+async def protected_fresh(Authorize: AuthJWT = Depends()):
+    await Authorize.fresh_jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

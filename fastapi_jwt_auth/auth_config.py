@@ -1,6 +1,6 @@
 from fastapi_jwt_auth.config import LoadConfig
 from pydantic import ValidationError
-from typing import Callable, List
+from typing import Awaitable, Callable, List
 from datetime import timedelta
 
 class AuthConfig:
@@ -97,7 +97,7 @@ class AuthConfig:
             raise TypeError("Config must be pydantic 'BaseSettings' or list of tuple")
 
     @classmethod
-    def token_in_denylist_loader(cls, callback: Callable[...,bool]) -> "AuthConfig":
+    def token_in_denylist_loader(cls, callback: Awaitable) -> "AuthConfig":
         """
         This decorator sets the callback function that will be called when
         a protected endpoint is accessed and will check if the JWT has been

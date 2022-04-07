@@ -63,10 +63,10 @@ async def get():
 async def websocket(websocket: WebSocket, token: str = Query(...), Authorize: AuthJWT = Depends()):
     await websocket.accept()
     try:
-        Authorize.jwt_required("websocket",token=token)
-        # Authorize.jwt_optional("websocket",token=token)
-        # Authorize.jwt_refresh_token_required("websocket",token=token)
-        # Authorize.fresh_jwt_required("websocket",token=token)
+        await Authorize.jwt_required("websocket",token=token)
+        # await Authorize.jwt_optional("websocket",token=token)
+        # await Authorize.jwt_refresh_token_required("websocket",token=token)
+        # await Authorize.fresh_jwt_required("websocket",token=token)
         await websocket.send_text("Successfully Login!")
         decoded_token = Authorize.get_raw_jwt(token)
         await websocket.send_text(f"Here your decoded token: {decoded_token}")

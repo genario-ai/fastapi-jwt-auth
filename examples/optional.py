@@ -33,8 +33,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     return {"access_token": access_token}
 
 @app.get('/partially-protected')
-def partially_protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_optional()
+async def partially_protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_optional()
 
     # If no jwt is sent in the request, get_jwt_subject() will return None
     current_user = Authorize.get_jwt_subject() or "anonymous"

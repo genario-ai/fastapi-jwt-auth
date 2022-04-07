@@ -38,8 +38,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 # In protected route, get the claims you added to the jwt with the
 # get_raw_jwt() method
 @app.get('/claims')
-def user(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def user(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     foo_claims = Authorize.get_raw_jwt()['foo']
     return {"foo": foo_claims}

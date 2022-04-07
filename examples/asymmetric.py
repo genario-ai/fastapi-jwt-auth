@@ -64,16 +64,16 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 @app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_refresh_token_required()
+async def refresh(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_refresh_token_required()
 
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
     return {"access_token": new_access_token}
 
 @app.get('/protected')
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

@@ -59,8 +59,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 # Standard refresh endpoint. Token in denylist will not
 # be able to access this endpoint
 @app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_refresh_token_required()
+async def refresh(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_refresh_token_required()
 
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
@@ -68,8 +68,8 @@ def refresh(Authorize: AuthJWT = Depends()):
 
 # Endpoint for revoking the current users access token
 @app.delete('/access-revoke')
-def access_revoke(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def access_revoke(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     # Store the tokens in redis with the value true for revoked.
     # We can also set an expires time on these tokens in redis,
@@ -80,8 +80,8 @@ def access_revoke(Authorize: AuthJWT = Depends()):
 
 # Endpoint for revoking the current users refresh token
 @app.delete('/refresh-revoke')
-def refresh_revoke(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_refresh_token_required()
+async def refresh_revoke(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_refresh_token_required()
 
     jti = Authorize.get_raw_jwt()['jti']
     redis_conn.setex(jti,settings.refresh_expires,'true')
@@ -89,8 +89,8 @@ def refresh_revoke(Authorize: AuthJWT = Depends()):
 
 # A token in denylist will not be able to access this any more
 @app.get('/protected')
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

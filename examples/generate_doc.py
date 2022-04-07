@@ -35,8 +35,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     return {"access_token": access_token}
 
 @app.get('/protected', operation_id="authorize")
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

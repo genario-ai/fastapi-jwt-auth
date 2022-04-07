@@ -39,8 +39,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 # In protected route, automatically check incoming JWT
 # have algorithm in your `authjwt_decode_algorithms` or not
 @app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_refresh_token_required()
+async def refresh(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_refresh_token_required()
 
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
@@ -49,8 +49,8 @@ def refresh(Authorize: AuthJWT = Depends()):
 # In protected route, automatically check incoming JWT
 # have algorithm in your `authjwt_decode_algorithms` or not
 @app.get('/protected')
-def protected(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def protected(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}

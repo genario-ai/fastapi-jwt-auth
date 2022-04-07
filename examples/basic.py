@@ -44,8 +44,8 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 # protect endpoint with function jwt_required(), which requires
 # a valid access token in the request headers to access.
 @app.get('/user')
-def user(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+async def user(Authorize: AuthJWT = Depends()):
+    await Authorize.jwt_required()
 
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}
