@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flit = "*"
+python-coveralls = "*"
 
 [dev-packages]
 
